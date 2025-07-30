@@ -1,5 +1,30 @@
 #include "driver.h"
 
+
+//TESTING KERNEL CALLBACK
+// handle incoming notifications about new/terminated processes
+void sCreateProcessNotifyRoutine(HANDLE ppid, HANDLE pid, BOOLEAN create)
+{
+	if (create)
+	{
+		PEPROCESS process = NULL;
+		PUNICODE_STRING parentProcessName = NULL, processName = NULL;
+
+		PsLookupProcessByProcessId(ppid, &process);
+		SeLocateProcessImageName(process, &parentProcessName);
+
+		PsLookupProcessByProcessId(pid, &process);
+		SeLocateProcessImageName(process, &processName);
+
+		KdPrint(("%d %wZ\n\t\t%d %wZ\n", ppid, parentProcessName, pid, processName));
+	}
+	else
+	{
+		KdPrint(("Process %d lost child %d\n", ppid, pid));
+	}
+}
+//END TESTING KERNEL CALLBACK
+
 PVOID pLoadLibraryExA = { 0 };
 
 PVOID ApcKernelRoutine(PKAPC Apc, PKNORMAL_ROUTINE* NormalRoutine, PVOID* SystemArgument1, PVOID* SystemArgument2, PVOID* Context) {
@@ -237,6 +262,10 @@ void NTAPI DriverUnload(PDRIVER_OBJECT pDriverObject) {
 	UNREFERENCED_PARAMETER(pDriverObject);
 
 	PsRemoveLoadImageNotifyRoutine(&LoadImageNotifyRoutine);
+
+	//TESTING
+	PsSetCreateProcessNotifyRoutine(sCreateProcessNotifyRoutine, TRUE);
+	//END TESTING
 	KdPrint(("Driver successfully unloaded\n"));
 }
 
@@ -250,8 +279,16 @@ NTSTATUS NTAPI DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegist
 	NTSTATUS status;
 	status = STATUS_SUCCESS;
 
+	//TESTING
+	// register sCreateProcessNotifyRoutine function to receive notifications about new/terminated processes https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/subscribing-to-process-creation-thread-creation-and-image-load-notifications-from-a-kernel-driver
+	PsSetCreateProcessNotifyRoutine(sCreateProcessNotifyRoutine, FALSE);
+	KdPrint(("+++Registered PsSetCreateProcessNotify+++"));
+	//END TESTING 
+
 	KdPrint(("Registering LoadImageNotifyRoutine\n"));
 	PsSetLoadImageNotifyRoutine(&LoadImageNotifyRoutine);
+
+	
 
 	pDriverObject->DriverUnload = (PDRIVER_UNLOAD)DriverUnload;
 
