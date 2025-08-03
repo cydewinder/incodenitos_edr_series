@@ -112,6 +112,45 @@ void StartNamedPipeServer() {
 	}
 }
 
+bool StartETWConsumer() {
+	STARTUPINFOA si;
+	PROCESS_INFORMATION pi;
+
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	// Path to your ETW consumer executable
+	const char* exePath = "C:\\Users\\setup\\source\\repos\\EDR_Test\\x64\\Debug\\etw_test.exe";
+
+	// Create the process
+	if (CreateProcessA(
+		exePath,           // Application name
+		NULL,              // Command line arguments
+		NULL,              // Process security attributes
+		NULL,              // Thread security attributes
+		FALSE,             // Inherit handles
+		0,                 // Creation flags
+		NULL,              // Environment
+		NULL,              // Current directory
+		&si,               // Startup info
+		&pi                // Process info
+	)) {
+		std::cout << "ETW Consumer started successfully!" << std::endl;
+		std::cout << "Process ID: " << pi.dwProcessId << std::endl;
+
+		// Close handles (process continues running)
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+		return true;
+	}
+	else {
+		DWORD error = GetLastError();
+		std::cout << "Failed to start ETW Consumer. Error: " << error << std::endl;
+		return false;
+	}
+}
+
 int main(int argc, char* argv[]) {
 	BOOL bKernel = FALSE; //this logic can be activated if we want to differentiate turn off the apc injection being done by the kernel.
 	if (argc == 2 && std::string(argv[1]) == "kernel") {
@@ -144,8 +183,23 @@ int main(int argc, char* argv[]) {
 
 	}
 	printf("Starting Named Pipe Server\n");
-	
+
+	//testing etw_consumer3 load (not working!!!)
+	//HMODULE hDll = LoadLibrary(L"C:\\Users\\setup\\source\\repos\\EDR_Test\\x64\\Debug\\etw_consumer3.dll");
+	//if (!hDll) {
+	//	std::cerr << "Failed to load DLL\n";
+	//	return 1;
+	//}
+	//end testing etw_consumer3 load
+
+	//testing starting etw_test.exe
+
+	//end testing starting etw_test.exe
+	StartETWConsumer();
 	//start named pipe server
+
 	StartNamedPipeServer();
+
+
 	return 0;
 }

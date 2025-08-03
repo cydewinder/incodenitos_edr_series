@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vDriver", "vDriver\vDriver.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_injection", "test_injection\test_injection.vcxproj", "{D53AEEAF-977C-4F03-8C4B-5A50C40267A8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "etw_test", "etw_test\etw_test.vcxproj", "{B519334F-7678-4025-AD3F-41433F9E3799}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -65,6 +67,14 @@ Global
 		{D53AEEAF-977C-4F03-8C4B-5A50C40267A8}.Release|x64.Build.0 = Release|x64
 		{D53AEEAF-977C-4F03-8C4B-5A50C40267A8}.Release|x86.ActiveCfg = Release|Win32
 		{D53AEEAF-977C-4F03-8C4B-5A50C40267A8}.Release|x86.Build.0 = Release|Win32
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Debug|x64.ActiveCfg = Debug|x64
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Debug|x64.Build.0 = Debug|x64
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Debug|x86.ActiveCfg = Debug|Win32
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Debug|x86.Build.0 = Debug|Win32
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Release|x64.ActiveCfg = Release|x64
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Release|x64.Build.0 = Release|x64
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Release|x86.ActiveCfg = Release|Win32
+		{B519334F-7678-4025-AD3F-41433F9E3799}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
