@@ -104,11 +104,13 @@ public:
                 if (len >= 4) { // Minimum meaningful string length
                     std::wstring candidate(wstr, len);
                     if (IsPowerShellContent(candidate)) {
-                        std::wcout << L"*** POWERSHELL IN BINARY (Unicode) ***" << std::endl;
-                        std::wcout << L"Property: " << propertyName << std::endl;
-                        std::wcout << L"Offset: " << i << L" Length: " << len << std::endl;
-                        std::wcout << L"Content: " << candidate << std::endl;
-                        std::wcout << L"*** END BINARY POWERSHELL ***\n" << std::endl;
+                        //std::wcout << L"*** POWERSHELL IN BINARY (Unicode) ***" << std::endl;
+                        //Logger::LogMessage(("*** POWERSHELL IN BINARY (Unicode) ***"));
+                        //std::wcout << L"Property: " << propertyName << std::endl;
+                        //std::wcout << L"Offset: " << i << L" Length: " << len << std::endl;
+                        //std::wcout << L"Content: " << candidate << std::endl;
+                        Logger::LogMessage("*** Content: " + std::string(candidate.begin(), candidate.end()) + " ***");
+                        //std::wcout << L"*** END BINARY POWERSHELL ***\n" << std::endl;
                     }
                     i += (len * 2); // Skip past this string
                 }
@@ -128,12 +130,14 @@ public:
                 if (len >= 4) {
                     std::string candidate((char*)(data + i), len);
                     if (IsPowerShellContent(candidate)) {
-                        std::wcout << L"*** POWERSHELL IN BINARY (ANSI) ***" << std::endl;
-                        std::wcout << L"Property: " << propertyName << std::endl;
-                        std::wcout << L"Offset: " << i << L" Length: " << len << std::endl;
-                        std::wcout << L"Content: ";
-                        std::cout << candidate << std::endl;
-                        std::wcout << L"*** END BINARY POWERSHELL ***\n" << std::endl;
+                        //std::wcout << L"*** POWERSHELL IN BINARY (ANSI) ***" << std::endl;
+                        //Logger::LogMessage(("*** POWERSHELL IN BINARY (ANSI) ***"));
+                        //std::wcout << L"Property: " << propertyName << std::endl;
+                        //std::wcout << L"Offset: " << i << L" Length: " << len << std::endl;
+                        //std::wcout << L"Content: ";
+                        //std::cout << candidate << std::endl;
+                        Logger::LogMessage("*** Content: " + std::string(candidate.begin(), candidate.end()) + " ***");
+                        //std::wcout << L"*** END BINARY POWERSHELL ***\n" << std::endl;
                     }
                     i += len; // Skip past this string
                 }
@@ -180,12 +184,14 @@ public:
                 if (len >= 4 && validUtf8) {
                     std::string candidate((char*)(data + i), len);
                     if (IsPowerShellContent(candidate)) {
-                        std::wcout << L"*** POWERSHELL IN BINARY (UTF-8) ***" << std::endl;
-                        std::wcout << L"Property: " << propertyName << std::endl;
-                        std::wcout << L"Offset: " << i << L" Length: " << len << std::endl;
-                        std::wcout << L"Content: ";
-                        std::cout << candidate << std::endl;
-                        std::wcout << L"*** END BINARY POWERSHELL ***\n" << std::endl;
+                        //std::wcout << L"*** POWERSHELL IN BINARY (UTF-8) ***" << std::endl;
+                        //Logger::LogMessage(("*** POWERSHELL IN BINARY (ANSI) ***"));
+                        //std::wcout << L"Property: " << propertyName << std::endl;
+                        //std::wcout << L"Offset: " << i << L" Length: " << len << std::endl;
+                        //std::wcout << L"Content: ";
+                        //std::cout << candidate << std::endl;
+                        //Logger::LogMessage("*** Content: " + std::string(candidate.begin(), candidate.end()) + " ***");
+                        //std::wcout << L"*** END BINARY POWERSHELL ***\n" << std::endl;
                     }
                     i += len; // Skip past this string
                 }
@@ -236,37 +242,41 @@ public:
             if (propertyInfo.nonStructType.InType == TDH_INTYPE_UNICODESTRING && propertySize >= sizeof(WCHAR)) {
                 std::wstring content = (LPCWSTR)propertyBuffer.data();
                 if (IsPowerShellContent(content)) {
-                    std::wcout << L"\n*** POWERSHELL CONTENT DETECTED ***" << std::endl;
-                    std::wcout << L"Property: " << propertyName << std::endl;
-                    std::wcout << L"Type: Unicode String" << std::endl;
-                    std::wcout << L"Content Length: " << content.length() << L" characters" << std::endl;
-                    std::wcout << L"Content:" << std::endl;
-                    std::wcout << L"----------------------------------------" << std::endl;
-                    std::wcout << content << std::endl;
-                    std::wcout << L"----------------------------------------" << std::endl;
-                    std::wcout << L"*** END POWERSHELL CONTENT ***\n" << std::endl;
+                    //std::wcout << L"\n*** POWERSHELL CONTENT DETECTED ***" << std::endl;
+					//Logger::LogMessage(("*** POWERSHELL CONTENT DETECTED ***"));
+                    //Logger::LogMessage("*** Content: " + std::string(content.begin(), content.end()) + " ***");
+                    //std::wcout << L"Property: " << propertyName << std::endl;
+                    //std::wcout << L"Type: Unicode String" << std::endl;
+                    //std::wcout << L"Content Length: " << content.length() << L" characters" << std::endl;
+                    //std::wcout << L"Content:" << std::endl;
+                    //std::wcout << L"----------------------------------------" << std::endl;
+                    //std::wcout << content << std::endl;
+                    //std::wcout << L"----------------------------------------" << std::endl;
+                    //std::wcout << L"*** END POWERSHELL CONTENT ***\n" << std::endl;
                     foundPowerShellContent = true;
                 }
             }
             else if (propertyInfo.nonStructType.InType == TDH_INTYPE_ANSISTRING && propertySize > 0) {
                 std::string content = (LPCSTR)propertyBuffer.data();
                 if (IsPowerShellContent(content)) {
-                    std::wcout << L"\n*** POWERSHELL CONTENT DETECTED ***" << std::endl;
-                    std::wcout << L"Property: " << propertyName << std::endl;
-                    std::wcout << L"Type: ANSI String" << std::endl;
-                    std::wcout << L"Content Length: " << content.length() << L" characters" << std::endl;
-                    std::wcout << L"Content:" << std::endl;
-                    std::wcout << L"----------------------------------------" << std::endl;
-                    std::cout << content << std::endl;
-                    std::wcout << L"----------------------------------------" << std::endl;
-                    std::wcout << L"*** END POWERSHELL CONTENT ***\n" << std::endl;
+                    //std::wcout << L"\n*** POWERSHELL CONTENT DETECTED ***" << std::endl;
+                    //Logger::LogMessage(("*** POWERSHELL CONTENT DETECTED ***"));
+                    //Logger::LogMessage("*** Content: " + std::string(content.begin(), content.end()) + " ***");
+                    //std::wcout << L"Property: " << propertyName << std::endl;
+                    //std::wcout << L"Type: ANSI String" << std::endl;
+                    //std::wcout << L"Content Length: " << content.length() << L" characters" << std::endl;
+                    //std::wcout << L"Content:" << std::endl;
+                    //std::wcout << L"----------------------------------------" << std::endl;
+                    //std::cout << content << std::endl;
+                    //std::wcout << L"----------------------------------------" << std::endl;
+                    //std::wcout << L"*** END POWERSHELL CONTENT ***\n" << std::endl;
                     foundPowerShellContent = true;
                 }
             }
             else if (propertyInfo.nonStructType.InType == TDH_INTYPE_BINARY && propertySize > 4) {
                 // Deep parsing of binary data for embedded strings
-                std::wcout << L"\n=== ANALYZING BINARY PROPERTY: " << propertyName << L" ===" << std::endl;
-                std::wcout << L"Binary Size: " << propertySize << L" bytes" << std::endl;
+                //std::wcout << L"\n=== ANALYZING BINARY PROPERTY: " << propertyName << L" ===" << std::endl;
+                //std::wcout << L"Binary Size: " << propertySize << L" bytes" << std::endl;
 
                 // Try to parse as different encodings
                 ParseBinaryForStrings(propertyBuffer.data(), propertySize, propertyName);
@@ -280,12 +290,12 @@ public:
     static VOID WINAPI EventRecordCallback(PEVENT_RECORD eventRecord) {
         if (eventRecord == nullptr) return;
 
-        std::wcout << L"Event received:" << std::endl;
-        std::wcout << L"  Provider: " << std::hex << eventRecord->EventHeader.ProviderId.Data1 << std::endl;
-        std::wcout << L"  Event ID: " << eventRecord->EventHeader.EventDescriptor.Id << std::endl;
-        std::wcout << L"  Process ID: " << eventRecord->EventHeader.ProcessId << std::endl;
-        std::wcout << L"  Thread ID: " << eventRecord->EventHeader.ThreadId << std::endl;
-        std::wcout << L"  Timestamp: " << eventRecord->EventHeader.TimeStamp.QuadPart << std::endl;
+        //std::wcout << L"Event received:" << std::endl;
+        //std::wcout << L"  Provider: " << std::hex << eventRecord->EventHeader.ProviderId.Data1 << std::endl;
+        //std::wcout << L"  Event ID: " << eventRecord->EventHeader.EventDescriptor.Id << std::endl;
+        //std::wcout << L"  Process ID: " << eventRecord->EventHeader.ProcessId << std::endl;
+        //std::wcout << L"  Thread ID: " << eventRecord->EventHeader.ThreadId << std::endl;
+        //std::wcout << L"  Timestamp: " << eventRecord->EventHeader.TimeStamp.QuadPart << std::endl;
 
         // Parse event data if present
         if (eventRecord->UserDataLength > 0) {
@@ -293,7 +303,7 @@ public:
             // Also try to extract PowerShell content
             ExtractPowerShellContent(eventRecord);
         }
-        std::wcout << L"-------------------" << std::endl;
+        //std::wcout << L"-------------------" << std::endl;
     }
 
     // Parse event data using TDH (Trace Data Helper)
@@ -328,10 +338,10 @@ public:
         }
 
         // Print event properties
-        std::wcout << L"  Properties (" << eventInfo->TopLevelPropertyCount << L"):" << std::endl;
-        for (DWORD i = 0; i < eventInfo->TopLevelPropertyCount; i++) {
-            PrintProperty(eventRecord, eventInfo, i);
-        }
+        //std::wcout << L"  Properties (" << eventInfo->TopLevelPropertyCount << L"):" << std::endl;
+        //for (DWORD i = 0; i < eventInfo->TopLevelPropertyCount; i++) {
+        //    PrintProperty(eventRecord, eventInfo, i);
+        //}
 
         free(eventInfo);
     }
@@ -532,8 +542,8 @@ BOOL WINAPI ConsoleHandler(DWORD dwCtrlType) {
 
 int main() {
     Logger::LogMessage("=====AMSI ETW Event Consumer=====\n");
-    std::wcout << L"AMSI ETW Event Consumer" << std::endl;
-    std::wcout << L"=======================" << std::endl;
+    //std::wcout << L"AMSI ETW Event Consumer" << std::endl;
+    //std::wcout << L"=======================" << std::endl;
 
     // Check if running as administrator
     BOOL isAdmin = FALSE;
